@@ -1,0 +1,59 @@
+---
+# tasks file for ansible_role_rocm
+
+
+- name: AMDGPU Kernel Drivers
+  block:
+
+
+  - name: Add AMDGPU repository
+    ansible.builtin.copy:
+      dest: /etc/yum.repos.d/amdgpu.repo
+      content: |
+        [amdgpu]
+        name=amdgpu
+        baseurl=https://repo.radeon.com/amdgpu/{{ rocm_rocm_version }}/rhel/{{ rocm_rhel_version }}/main/x86_64/
+        enabled=1
+        priority=50
+        gpgcheck=1
+        gpgkey=https://repo.radeon.com/rocm/rocm.gpg.key
+
+    when: "rocm_install_kernel_drivers"
+
+
+  - name: Install kernel for building the DKMS source
+    ansible.builtin.dnf:
+      name: kernel
+      state: latest
+
+  - name: Install AMDGPU Kernel Drivers amdgpu-dkms
+    ansible.builtin.dnf:
+      name: amdgpu-dkms
+      state: latest
+
+
+  when: "rocm_install_kernel_drivers"
+
+- name: ROCM
+  block:
+
+
+  - name: Add ROCM repository
+    ansible.builtin.copy:
+      dest: /etc/yum.repos.d/rocm.repo
+      content: |
+        [ROCm-{{ rocm_rocm_version }}]
+        name=ROCm{{ rocm_rocm_version }}
+        baseurl=https://repo.radeon.com/rocm/rhel9/{{ rocm_rocm_version }}/main
+        enabled=1
+        priority=50
+        gpgcheck=1
+        gpgkey=https://repo.radeon.com/rocm/rocm.gpg.key
+
+
+  - name: Install ROCM
+    ansible.builtin.dnf:
+      name: rocm
+      state: latest
+
+  when: "rocm_install_rocm"

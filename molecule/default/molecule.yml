@@ -1,0 +1,16 @@
+---
+dependency:
+  name: galaxy
+driver:
+  name: podman
+platforms:
+#  - name: instance
+#    image: quay.io/centos/centos:stream8
+#    pre_build_image: true
+  - name: instance-rh
+    image: registry.access.redhat.com/ubi9/ubi
+    pre_build_image: true
+provisioner:
+  name: ansible
+verifier:
+  name: ansible
