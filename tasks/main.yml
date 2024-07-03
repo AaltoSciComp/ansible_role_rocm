@@ -55,5 +55,7 @@
     ansible.builtin.dnf:
       name: rocm
       state: latest
+      enablerepo: "{{ rocm_crb_repository }}"
+
 
   when: "rocm_install_rocm"
