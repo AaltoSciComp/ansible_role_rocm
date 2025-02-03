@@ -37,7 +37,6 @@
 - name: ROCM
   block:
 
-
   - name: Add ROCM repository
     ansible.builtin.copy:
       dest: /etc/yum.repos.d/rocm.repo
@@ -50,12 +49,12 @@
         gpgcheck=1
         gpgkey=https://repo.radeon.com/rocm/rocm.gpg.key
 
-
-  - name: Install ROCM
+  # allow user to override packages if needed e.g. only headers for slurm building
+  - name: Install ROCM packages
     ansible.builtin.dnf:
-      name: rocm
+      name: "{{ item }}"
       state: latest
       enablerepo: "{{ rocm_crb_repository }}"
-
+    loop: "{{ rocm_packages }}"
 
   when: "rocm_install_rocm"

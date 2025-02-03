@@ -8,3 +8,6 @@ rocm_install_kernel_drivers: True
 rocm_install_rocm:           False
 
 rocm_crb_repository: "crb"
+
+rocm_packages:
+  - rocm
